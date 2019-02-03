@@ -1,0 +1,24 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+#btn{
+    margin-left: 6px;
+}
+
+.fechas{
+    border: 1px solid;
+}
+h4.entre{
+    margin: 0px auto;
+    align-content: center;
+}
+
+
+
+#t0{
+    display: none;
+}
+
+.table-responsive {
+    display: table;
+}
