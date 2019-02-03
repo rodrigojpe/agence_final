@@ -7,7 +7,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const myConnection = require('express-myconnection'),
 dbOptions = {
-    host: 'localhost',
+    host: '127.0.0.1',
     user: 'root',
     password: 'Rodrigo.1',
     port: 3306,
