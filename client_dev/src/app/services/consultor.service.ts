@@ -68,4 +68,3 @@ export class ConsultorService {
             .pipe(map(res => res));
   }
 }
-
