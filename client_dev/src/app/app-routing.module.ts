@@ -4,8 +4,8 @@ import { PageComponent } from './components/page/page.component';
 
 
 const APP_ROUTES: Routes = [
-  
-  { path: 'home', component: PageComponent},
+
+  { path: 'cons', component: PageComponent},
   { path: '**', pathMatch: 'full', redirectTo: 'home' }
 ];
 
