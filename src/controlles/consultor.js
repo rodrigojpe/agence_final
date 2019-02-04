@@ -9,13 +9,13 @@ var val = [];
 
 controller.prueba = (req , res)  =>{
     req.getConnection((err, conn) => {
-            conn.query("select PERMISSAO_SISTEMA.co_usuario  as name "+ 
-        "from CAO_USUARIO inner join PERMISSAO_SISTEMA "+
-        "on CAO_USUARIO.co_usuario = PERMISSAO_SISTEMA.co_usuario "+
-        "and PERMISSAO_SISTEMA.co_sistema = 1 "+
-        "and PERMISSAO_SISTEMA.IN_ATIVO = 'S' "+
-        "and PERMISSAO_SISTEMA.CO_TIPO_USUARIO in ( 0,1, 2)  "+
-        "order by PERMISSAO_SISTEMA.co_usuario asc;", (err, consutores) => {
+            conn.query("select us.co_usuario as name "+
+                        "from cao_usuario us inner join permissao_sistema p "+
+                        "on us.co_usuario = p.co_usuario "+
+                        "and p.co_sistema = 1 "+
+                        "and p.IN_ATIVO = 'S' "+
+                        "and p.CO_TIPO_USUARIO in ( 0,1, 2) "+
+                        "order by p.co_usuario asc;", (err, consutores) => {
                         if (err) {
                             res.json(err);
                         }
@@ -36,29 +36,23 @@ controller.prueba = (req , res)  =>{
 controller.Rotatorio = async(req, res) =>{
     console.log('llegando a rotatorio');
     let values = req.body;
-    // let year_in = req.body.year_in.replace(/"/g, "'").toString();
-    // let month_in = req.body.month_in.replace(/"/g, "'").toString();
-    // let year_to = req.body.year_to.replace(/"/g, "'").toString();
-    // let month_to = req.body.month_to.replace(/"/g, "'").toString();
-    
-  
-    // var params = [ values.params.replace(/"/g, "'").toString() ]
+
     console.log(values);
     console.log(values.b);
-    
+
         req.getConnection((err, conn) => {
-            console.log('1');
-            conn.query("select Year(CAO_FATURA.data_emissao) as year,  Month(CAO_FATURA.data_emissao)  as mes, CAO_OS.co_usuario as consultor, "+
-                       "sum(round(CAO_FATURA.valor - (CAO_FATURA.valor * (cao_fatura.TOTAL_IMP_INC /100)))) as total, "+
-                       "sum(CAO_SALARIO.brut_salario) as salario, "+
-                       "round((sum(CAO_FATURA.valor - (CAO_FATURA.valor * cao_fatura.TOTAL_IMP_INC )) * sum(CAO_FATURA.COMISSAO_CN)))   as comissao, "+
-                       "round((sum(CAO_FATURA.valor - (CAO_FATURA.valor * (cao_fatura.TOTAL_IMP_INC /100)))) - (CAO_SALARIO.brut_salario + (sum(CAO_FATURA.valor - (CAO_FATURA.valor * cao_fatura.TOTAL_IMP_INC )) * sum(CAO_FATURA.COMISSAO_CN)))) as lucro "+
-                       "from CAO_FATURA  inner join  CAO_OS on cao_os.co_sistema = CAO_FATURA.co_sistema "+
-                       "inner join CAO_SALARIO on CAO_SALARIO.co_usuario = CAO_OS.co_usuario "+
-                       "and CAO_OS.co_usuario =  ( ? ) "+
-                       "where (EXTRACT( YEAR_MONTH FROM CAO_FATURA.data_emissao) between concat( (?)   , (?) ) and  concat(  (?)  ,  (?)   )) "+
-                       "group by Month(CAO_FATURA.data_emissao),CAO_OS.co_usuario,CAO_SALARIO.brut_salario,Year(CAO_FATURA.data_emissao) "+ 
-                       "order by CAO_OS.co_usuario asc, Month(CAO_FATURA.data_emissao);" , [values.a, values.b, values.c, values.d, values.e], (err, data) => {
+            // console.log('1');
+            conn.query("select Year(f.data_emissao) as year,  Month(f.data_emissao)  as mes, c.co_usuario as consultor, "+
+                       "sum(round(f.valor - (f.valor * (f.TOTAL_IMP_INC /100)))) as total, "+
+                       "sum(s.brut_salario) as salario, "+
+                       "round((sum(f.valor - (f.valor * f.TOTAL_IMP_INC )) * sum(f.COMISSAO_CN)))   as comissao, "+
+                       "round((sum(f.valor - (f.valor * (f.TOTAL_IMP_INC /100)))) - (s.brut_salario + (sum(f.valor - (f.valor * f.TOTAL_IMP_INC )) * sum(f.COMISSAO_CN)))) as lucro "+
+                       "from cao_fatura f inner join  cao_os c on c.co_sistema = f.co_sistema "+
+                       "inner join cao_salario s on s.co_usuario = c.co_usuario "+
+                       "and c.co_usuario = ( ? ) "+
+                       "where (EXTRACT( YEAR_MONTH FROM f.data_emissao) between  concat( (?)   , (?) ) and  concat(  (?)  ,  (?)   )) "+
+                       "group by Month(f.data_emissao),c.co_usuario,s.brut_salario,Year(f.data_emissao) "+
+                       "order by c.co_usuario asc, Month(f.data_emissao);" , [values.a, values.b, values.c, values.d, values.e], (err, data) => {
 
                             if (err) {
                                 res.json(err);
@@ -68,13 +62,13 @@ controller.Rotatorio = async(req, res) =>{
                            this.val = console.log(JSON.stringify(data));
 
                         //     this.consult = JSON.stringify(values);
-                             
-    
-                            res.send({ 
-                               data 
+
+
+                            res.send({
+                               data
                             }) ;
-                                    
-                           
+
+
                         })
  })
 }
@@ -82,7 +76,7 @@ controller.Rotatorio = async(req, res) =>{
 //     console.log('llegando a custo_fixo');
 //     let values = req.body;
 //     console.log(values);
-    
+
 //         req.getConnection((err, conn) => {
 //             console.log('1');
 //             conn.query("select brut_salario as custo_fixo, co_usuario "+
@@ -96,7 +90,7 @@ controller.Rotatorio = async(req, res) =>{
 
 //                         //     this.consult = JSON.stringify(values);
 //                         //     console.log(this.values);
-    
+
 //                             res.status(200).send(
 //                                 lucro
 //                          ) ;
@@ -121,7 +115,7 @@ controller.Rotatorio = async(req, res) =>{
 //                                 console.log(comissao);
 //                             //     this.consult = JSON.stringify(values);
 //                             //     console.log(this.values);
-        
+
 //                                 res.status(200).send(
 //                                     comissao
 //                                 ) ;
