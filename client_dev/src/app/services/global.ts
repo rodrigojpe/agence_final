@@ -1,3 +1,3 @@
 export let GLOBAL = {
-    url : 'http://localhost:3000/'
+    url : 'http://142.93.163.238/'
   };
