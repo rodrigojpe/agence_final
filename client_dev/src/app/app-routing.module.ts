@@ -5,7 +5,7 @@ import { PageComponent } from './components/page/page.component';
 
 const APP_ROUTES: Routes = [
 
-  { path: 'cons', component: PageComponent},
+  { path: 'home', component: PageComponent},
   { path: '**', pathMatch: 'full', redirectTo: 'home' }
 ];
 
