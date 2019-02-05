@@ -64,7 +64,7 @@ app.use('/', consutorRouter);
 app.use(express.static(path.join(__dirname)));
 
 app.get('*', function(req , res , next){
-    res.sendFile(path.resolve('client/index.html'));
+    res.sendFile(path.resolve('/client/index.html'));
 })
 
 app.listen(app.get('port'), () =>{
